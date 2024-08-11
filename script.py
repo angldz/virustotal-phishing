@@ -10,7 +10,7 @@ with open(txt_file) as fp:
     for line in fp:
         if line.startswith("||"):
             url = line.strip().lstrip("||").rstrip("^")
-            print(url)
+            
             is_malicious = False
         
             headers = {
@@ -27,30 +27,29 @@ with open(txt_file) as fp:
 
             if response.text:
                 parsed_json = json.loads(response.text)
-                
-                analysis_link = parsed_json['data']['links']['self']
 
-                headers = {
-                    "accept":"application/json",
-                    "x-apikey": "a39b0d386609a77dae047e18ce4a2bb48218d64db112adb3502f624ca2146624"
-                }
+                if 'data' in parsed_json:
+                    
+                    analysis_link = parsed_json['data']['links']['self']
 
-                analysis_response = requests.get(analysis_link, headers=headers)
+                    headers = {
+                        "accept":"application/json",
+                        "x-apikey": "a39b0d386609a77dae047e18ce4a2bb48218d64db112adb3502f624ca2146624"
+                    }
 
-                if analysis_response.text:
+                    analysis_response = requests.get(analysis_link, headers=headers)
 
-                    analysis_parsed_json = json.loads(analysis_response.text)
+                    if analysis_response.text:
 
-                    stats = analysis_parsed_json['data']['attributes']['stats']
+                        analysis_parsed_json = json.loads(analysis_response.text)
 
-                    print(stats)
+                        stats = analysis_parsed_json['data']['attributes']['stats']
 
-                    if stats['malicious']:
-                        if stats['malicious'] > 2:
-                            is_malicious = True
+                        if stats['malicious']:
+                            if stats['malicious'] > 2:
+                                is_malicious = True
 
             if is_malicious:
-                print ("IS MALICIOUS")
+                print (url, "IS MALICIOUS", stats['malicious'])
             else:
-                print ("is not malicious")
-            print()
+                print (url, "is not malicious")
