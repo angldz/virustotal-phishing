@@ -5,6 +5,8 @@ txt_file = "phishing-filter-agh.txt"
 
 api_url = "https://www.virustotal.com/api/v3/urls"
 
+# Get API key from environment variable
+api_key = os.getenv("VT_API_KEY")
 
 with open(txt_file) as fp:
     for line in fp:
@@ -16,7 +18,7 @@ with open(txt_file) as fp:
             headers = {
                 "accept":"application/json",
                 "content-type": "application/x-www-form-urlencoded",
-                "x-apikey": "a39b0d386609a77dae047e18ce4a2bb48218d64db112adb3502f624ca2146624"
+                "x-apikey": api_key
             }
 
             form_data = {
@@ -34,7 +36,7 @@ with open(txt_file) as fp:
 
                     headers = {
                         "accept":"application/json",
-                        "x-apikey": "a39b0d386609a77dae047e18ce4a2bb48218d64db112adb3502f624ca2146624"
+                        "x-apikey": api_key
                     }
 
                     analysis_response = requests.get(analysis_link, headers=headers)
